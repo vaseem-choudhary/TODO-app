@@ -1,7 +1,10 @@
 {% extends 'todo/base.html' %}
+{% block title %}All Tasks{% endblock %}
+
 {% block content %}
-<h2>All Tasks</h2>
-<table class="table table-striped">
+<h2 class="mb-3">All Tasks</h2>
+
+<table class="table table-striped align-middle">
     <thead>
         <tr>
             <th>Title</th>
@@ -14,24 +17,30 @@
     <tbody>
         {% for task in tasks %}
         <tr>
-            <td>{{ task.title }}</td>
+            <td class="{% if task.completed %}text-decoration-line-through text-muted{% endif %}">
+                {{ task.title }}
+            </td>
             <td>{{ task.description|linebreaksbr }}</td>
             <td>
-            <form method="post" action="{% url 'task:task_toggle_complete' task.pk %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-sm {% if task.completed %}btn-success{% else %}btn-outline-secondary{% endif %}">
-                {% if task.completed %}Done{% else %}Mark{% endif %}
-                </button>
-            </form>
+                <form method="post" action="{% url 'task:task_toggle_complete' task.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm {% if task.completed %}btn-success{% else %}btn-outline-secondary{% endif %}">
+                        {% if task.completed %}Done{% else %}Mark{% endif %}
+                    </button>
+                </form>
             </td>
             <td>{{ task.created_at|date:"Y-m-d H:i" }}</td>
             <td>
-            <a class="btn btn-sm btn-warning" href="{% url 'task:task_update' task.pk %}">Edit</a>
-            <a class="btn btn-sm btn-danger" href="{% url 'task:task_delete' task.pk %}">Delete</a>
+                <a class="btn btn-sm btn-warning" href="{% url 'task:task_update' task.pk %}">Edit</a>
+                <a class="btn btn-sm btn-danger" href="{% url 'task:task_delete' task.pk %}">Delete</a>
             </td>
         </tr>
         {% empty %}
-        <tr><td colspan="5">No tasks yet.</td></tr>
+        <tr>
+            <td colspan="5" class="text-center text-muted py-4">
+                No tasks yet. Click <strong>“Add Task”</strong> to create one.
+            </td>
+        </tr>
         {% endfor %}
     </tbody>
 </table>
