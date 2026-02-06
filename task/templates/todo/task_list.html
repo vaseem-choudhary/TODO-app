@@ -2,46 +2,79 @@
 {% block title %}All Tasks{% endblock %}
 
 {% block content %}
-<h2 class="mb-3">All Tasks</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">All Tasks</h2>
+    <span class="badge bg-secondary">
+        {{ tasks|length }} Tasks
+    </span>
+</div>
 
-<table class="table table-striped align-middle">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Done</th>
-            <th>Created</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for task in tasks %}
-        <tr>
-            <td class="{% if task.completed %}text-decoration-line-through text-muted{% endif %}">
-                {{ task.title }}
-            </td>
-            <td>{{ task.description|linebreaksbr }}</td>
-            <td>
-                <form method="post" action="{% url 'task:task_toggle_complete' task.pk %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm {% if task.completed %}btn-success{% else %}btn-outline-secondary{% endif %}">
-                        {% if task.completed %}Done{% else %}Mark{% endif %}
-                    </button>
-                </form>
-            </td>
-            <td>{{ task.created_at|date:"Y-m-d H:i" }}</td>
-            <td>
-                <a class="btn btn-sm btn-warning" href="{% url 'task:task_update' task.pk %}">Edit</a>
-                <a class="btn btn-sm btn-danger" href="{% url 'task:task_delete' task.pk %}">Delete</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5" class="text-center text-muted py-4">
-                No tasks yet. Click <strong>“Add Task”</strong> to create one.
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr>
+                        <td class="ps-4 fw-semibold {% if task.completed %}text-decoration-line-through text-muted{% endif %}">
+                            {{ task.title }}
+                        </td>
+
+                        <td class="text-muted small">
+                            {{ task.description|default:"—" }}
+                        </td>
+
+                        <td>
+                            {% if task.completed %}
+                                <span class="badge bg-success">Completed</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="text-muted small">
+                            {{ task.created_at|date:"d M Y, h:i A" }}
+                        </td>
+
+                        <td class="text-end pe-4">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <form method="post" action="{% url 'task:task_toggle_complete' task.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            class="btn {% if task.completed %}btn-outline-success{% else %}btn-outline-secondary{% endif %}">
+                                        {% if task.completed %}complete{% else %}Done{% endif %}
+                                    </button>
+                                </form>
+
+                                <a class="btn btn-outline-warning" href="{% url 'task:task_update' task.pk %}">
+                                    Edit
+                                </a>
+                                <a class="btn btn-outline-danger" href="{% url 'task:task_delete' task.pk %}">
+                                    Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-5">
+                            <div class="mb-2 fs-5">No tasks yet</div>
+                            <div class="small">Click <strong>“Add Task”</strong> to create your first task 🚀</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

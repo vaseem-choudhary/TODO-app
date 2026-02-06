@@ -6,6 +6,38 @@
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Premium UI polish (UI only) -->
+    <style>
+        body {
+            background: #f5f7fb;
+        }
+        .card {
+            border-radius: 16px;
+        }
+        .navbar {
+            border-radius: 12px;
+        }
+        .form-control,
+        .form-check-input {
+            border-radius: 10px;
+        }
+        .btn {
+            border-radius: 10px;
+        }
+        .btn-primary {
+            box-shadow: 0 6px 16px rgba(13, 110, 253, 0.2);
+        }
+        .btn-outline-secondary:hover,
+        .btn-outline-danger:hover,
+        .btn-outline-warning:hover {
+            transform: translateY(-1px);
+            transition: all 0.15s ease;
+        }
+        .table thead th {
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body class="bg-light">
 
@@ -13,7 +45,7 @@
     {% if messages %}
     <div class="container mt-3">
         {% for message in messages %}
-            <div class="alert alert-info">
+            <div class="alert alert-info shadow-sm">
                 {{ message }}
             </div>
         {% endfor %}
@@ -24,7 +56,9 @@
     <div class="container mt-3">
         {% if user.is_authenticated %}
             <div class="d-flex justify-content-between align-items-center">
-                <span>Logged in as <strong>{{ user.username }}</strong></span>
+                <span class="text-muted">
+                    Logged in as <strong class="text-dark">{{ user.username }}</strong>
+                </span>
                 <a class="btn btn-outline-danger btn-sm" href="{% url 'task:logout' %}">Logout</a>
             </div>
         {% else %}
@@ -35,13 +69,18 @@
         {% endif %}
     </div>
 
-    <hr>
+    <hr class="my-3">
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'task:task_list' %}"> Todo App</a>
-            <a class="btn btn-primary" href="{% url 'task:task_create' %}">+ Add Task</a>
+            <a class="navbar-brand fw-bold" href="{% url 'task:task_list' %}">Todo App</a>
+
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary" href="{% url 'task:task_create' %}">
+                    + Add Task
+                </a>
+            {% endif %}
         </div>
     </nav>
 

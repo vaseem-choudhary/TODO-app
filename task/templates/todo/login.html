@@ -2,21 +2,46 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<h2 class="mb-3">Login</h2>
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h3 class="card-title text-center mb-4">Welcome back</h3>
 
-<form method="post" action="{% url 'task:login' %}">
-    {% csrf_token %}
+                <form method="post" action="{% url 'task:login' %}">
+                    {% csrf_token %}
 
-    <div class="mb-3">
-        <label class="form-label">Username</label>
-        <input class="form-control" type="text" name="username" required>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input class="form-control" type="text" name="username" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Password</label>
+                        <input class="form-control" type="password" name="password" required>
+                    </div>
+
+                    <div class="d-grid">
+                        <button class="btn btn-primary btn-lg" type="submit">
+                            Login
+                        </button>
+                    </div>
+                </form>
+
+                <p class="text-center text-muted mt-3 mb-0">
+                    Don’t have an account?
+                    <a href="{% url 'task:register' %}">Register</a>
+                </p>
+            </div>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label class="form-label">Password</label>
-        <input class="form-control" type="password" name="password" required>
-    </div>
-
-    <button class="btn btn-primary" type="submit">Login</button>
-</form>
+</div>
 {% endblock %}

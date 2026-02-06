@@ -11,12 +11,12 @@ from .forms import RegistrationForm
 
 def register_view(request):
     if request.method == 'POST':
-        form = RegistrationForm(request.POST)   # missing before
+        form = RegistrationForm(request.POST)   
         if form.is_valid():
             user = form.save()
             login(request, user)
             messages.success(request, 'Registration successful and logged in!')
-            return redirect('task:task_list')   # fixed namespace
+            return redirect('task:task_list')   
         else:
             messages.error(request, 'Registration failed. Please correct the errors below.')
     else:
@@ -53,7 +53,7 @@ def logout_view(request):
 
 @login_required
 def task_list(request):
-    tasks = Task.objects.filter(user=request.user).order_by('-created_at')  # 🔐 per-user tasks
+    tasks = Task.objects.filter(user=request.user).order_by('-created_at')  #  per-user tasks
     return render(request, 'todo/task_list.html', {'tasks': tasks})
 
 
@@ -65,7 +65,7 @@ def task_create(request):
 
         if title:
             Task.objects.create(
-                user=request.user,   # 🔐 assign task to user
+                user=request.user,   #  assign task to user
                 title=title,
                 description=description
             )
@@ -79,7 +79,7 @@ def task_create(request):
 
 @login_required
 def task_update(request, pk):
-    task = get_object_or_404(Task, pk=pk, user=request.user)  # 🔐 user ownership check
+    task = get_object_or_404(Task, pk=pk, user=request.user)  #  user ownership check
 
     if request.method == 'POST':
         title = request.POST.get('title', '').strip()
@@ -112,7 +112,7 @@ def task_update(request, pk):
 
 @login_required
 def task_delete(request, pk):
-    task = get_object_or_404(Task, pk=pk, user=request.user)  # 🔐 user ownership check
+    task = get_object_or_404(Task, pk=pk, user=request.user)  #  user ownership check
 
     if request.method == 'POST':
         task.delete()
@@ -123,7 +123,7 @@ def task_delete(request, pk):
 
 @login_required
 def task_toggle_complete(request, pk):
-    task = get_object_or_404(Task, pk=pk, user=request.user)  # 🔐 user ownership check
+    task = get_object_or_404(Task, pk=pk, user=request.user)  #  user ownership check
 
     if request.method == 'POST':
         task.completed = not task.completed
